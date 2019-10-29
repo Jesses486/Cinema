@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -34,7 +36,7 @@ public class Film {
 	@Column(name="pk_film")
 	private long id;
 	@Column(name="titre")
-	private String Titre;
+	private String titre;
 	@Column(name="realisateur")
 	private String realisateur;
 	@Column(name="date_sortie")
@@ -55,6 +57,23 @@ public class Film {
 	@MapKeyColumn(name="role")
 	private Map<String, Acteur> roles = new HashMap<String, Acteur>();
 	
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(name="films_acteur",
+	joinColumns=@JoinColumn(name="fk_film", referencedColumnName="pk_film"),
+	inverseJoinColumns=@JoinColumn(name="fk_acteur", referencedColumnName="pk_acteur"))
+	private Map<Role, Acteur> role = new HashMap<Role, Acteur>();
+	
+	public Film() {}
+	
+	public Film(String titre, String realisateur, LocalDate date_sortie, int duree) {
+		super();
+		this.titre = titre;
+		this.realisateur = realisateur;
+		this.date_sortie = date_sortie;
+		this.duree = duree;
+	}
+
+
 	public long getId() {
 		return id;
 	}
@@ -62,10 +81,10 @@ public class Film {
 		this.id = id;
 	}
 	public String getTitre() {
-		return Titre;
+		return titre;
 	}
 	public void setTitre(String titre) {
-		Titre = titre;
+		titre = titre;
 	}
 	public String getRealisateur() {
 		return realisateur;
@@ -92,6 +111,12 @@ public class Film {
 		this.roles = roles;
 	}
 
-	
+	public Map<Role, Acteur> getRole() {
+		return role;
+	}
+
+	public void setRole(Map<Role, Acteur> role) {
+		this.role = role;
+	}
 	
 }

@@ -43,17 +43,18 @@ public class Acteur {
 	@Column(name="date_deces")
 	private LocalDate date_deces;
 
-//	@ManyToMany(fetch=FetchType.LAZY)
-//	@JoinTable(name="films_acteur",
-//	joinColumns=@JoinColumn(name="fk_film", referencedColumnName="pk_acteur"),
-//	inverseJoinColumns=@JoinColumn(name="fk_acteur", referencedColumnName="pk_film"))
-//	@MapKeyColumn(name="role")
-//	private Map<String, Film> roles = new HashMap<String, Film>();
 	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name="films_acteur",
-	joinColumns=@JoinColumn(name="fk_film", referencedColumnName="pk_acteur"),
-	inverseJoinColumns=@JoinColumn(name="fk_acteur", referencedColumnName="pk_film"))
+	joinColumns=@JoinColumn(name="fk_acteur", referencedColumnName="pk_acteur"),
+	inverseJoinColumns=@JoinColumn(name="fk_film", referencedColumnName="pk_film"))
+	@MapKeyColumn(name="role")
 	private Map<String, Film> roles = new HashMap<String, Film>();
+	
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(name="films_acteur",
+	joinColumns=@JoinColumn(name="fk_acteur", referencedColumnName="pk_acteur"),
+	inverseJoinColumns=@JoinColumn(name="fk_film", referencedColumnName="pk_film"))
+	private Map<Role, Film> role = new HashMap<Role, Film>();
 
 	public String getNom() {
 		return nom;
@@ -101,6 +102,14 @@ public class Acteur {
 
 	public void setRoles(Map<String, Film> roles) {
 		this.roles = roles;
+	}
+
+	public Map<Role, Film> getRole() {
+		return role;
+	}
+
+	public void setRole(Map<Role, Film> role) {
+		this.role = role;
 	}
 	
 	

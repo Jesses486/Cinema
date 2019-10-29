@@ -10,6 +10,7 @@ import javax.persistence.EntityManagerFactory;
 
 import fr.gtm.entities.Acteur;
 import fr.gtm.entities.Film;
+import fr.gtm.entities.Role;
 
 public class DAO {
 	
@@ -17,6 +18,22 @@ public class DAO {
 
 	public DAO(EntityManagerFactory emf) {
 		this.emf = emf;
+	}
+	
+	public void create(Film entity) {
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		em.persist(entity);
+		em.getTransaction().commit();
+		em.close();
+	}
+	
+	public void update(Film entity) {
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		em.merge(entity);
+		em.getTransaction().commit();
+		em.close();	
 	}
 	
 	public List<Acteur> getAllActeur() {
@@ -39,15 +56,8 @@ public class DAO {
 		EntityManager em = emf.createEntityManager();
 		Film film = em.find(Film.class, id);
 		Map<String, Acteur> acteurs = new HashMap<String, Acteur>();
-//		List<Acteur> acteursList = getAllActeur();
-//		Acteur acteur = new Acteur();
-//		String role;
-//		for(String role : film.getRoles().keySet()) {
-//			acteur = film.getRoles();
-//			acteurs.put(,a);
-//		}
-        for (Map.Entry mapentry : film.getRoles().entrySet()) {
-            acteurs.put((String)mapentry.getKey(),(Acteur)mapentry.getValue());
+        for (Map.Entry<String, Acteur> mapentry : film.getRoles().entrySet()) {
+            acteurs.put(mapentry.getKey(),mapentry.getValue());
          }
 		em.close();
 		return acteurs;
@@ -58,11 +68,22 @@ public class DAO {
 		Acteur acteur = em.find(Acteur.class, id);
 		Map<String, Film> films = new HashMap<String, Film>();
 //		List<Film> films = new ArrayList<>();
-        for (Map.Entry mapentry : acteur.getRoles().entrySet()) {
-        	films.put((String)mapentry.getKey(),(Film)mapentry.getValue());
+        for (Map.Entry<String,Film> mapentry : acteur.getRoles().entrySet()) {
+        	films.put(mapentry.getKey(),mapentry.getValue());
          }
 		em.close();
 		return films;
+	}
+	
+	public Map<Role, Acteur> getAllActeursRoleFromFilm(long id) {
+		EntityManager em = emf.createEntityManager();
+		Film film = em.find(Film.class, id);
+		Map<Role, Acteur> acteurs = new HashMap<Role, Acteur>();
+        for (Map.Entry<Role,Acteur> mapentry : film.getRole().entrySet()) {
+            acteurs.put(mapentry.getKey(),mapentry.getValue());
+         }
+		em.close();
+		return acteurs;
 	}
 	
 }

@@ -2,6 +2,8 @@ package fr.gtm.dao;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +17,7 @@ import org.junit.Test;
 import fr.gtm.dao.DAO;
 import fr.gtm.entities.Acteur;
 import fr.gtm.entities.Film;
+import fr.gtm.entities.Role;
 
 public class TestActeur {
 
@@ -42,8 +45,8 @@ public class TestActeur {
 	public void test_recuperation_films() {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("cinema");
 		DAO dao = new DAO(emf);
-		List<Film> acteurs = dao.getAllFilm();
-		assertEquals("m", "Le Seigneur des anneaux : La Communauté de l'anneau", acteurs.get(0).getTitre());
+		List<Film> films = dao.getAllFilm();
+		assertEquals("m", "Le Seigneur des anneaux : La Communauté de l'anneau", films.get(0).getTitre());
 	}
 	
 	@Test
@@ -61,6 +64,40 @@ public class TestActeur {
 		DAO dao = new DAO(emf);
 		Map<String, Film> films = dao.getAllFilmsFromActeur(1);
 		assertEquals("m", "Le Seigneur des anneaux : La Communauté de l'anneau", films.get("Gandalf Le Gris").getTitre());
+	}
+	
+//	@Test
+//	public void test_creation_Film() {
+//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("cinema");
+//		DAO dao = new DAO(emf);
+//		Film film = new Film("Green Book", "Peter Farrelly", LocalDate.of(2019, 1, 23), 130);
+//		dao.create(film);
+//		assertEquals("m", 1, 1);
+//	}
+	
+//	@Test
+//	public void test_update_film() {
+//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("cinema");
+//		DAO dao = new DAO(emf);
+//		Map<String, Acteur> acteurs = dao.getAllActeursFromFilm(1);
+//		Map<String, Acteur> roles = new HashMap<String, Acteur>();
+//		roles.put("Tony Vallelonga", acteurs.get("Aragorn"));
+//		List<Film> films = dao.getAllFilm();
+//		Film greenBook = films.get(films.size()-1);
+//		greenBook.setRoles(roles);
+//		dao.update(greenBook);
+//		assertEquals("m", 0, 0);
+//	}
+	
+	@Test
+	public void test_recuperation_ActeursRole_de_Film() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("cinema");
+		DAO dao = new DAO(emf);
+		Map<Role, Acteur> acteurs = dao.getAllActeursRoleFromFilm(5);
+		System.out.println(acteurs);
+		if(acteurs != null) {
+			assertEquals("m", "Mortensen", acteurs.get(new Role("Tony Vallelonga")).getNom());
+		}
 	}
 
 }
