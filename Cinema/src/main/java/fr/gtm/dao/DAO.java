@@ -1,4 +1,4 @@
-package fr.gtm.entities;
+package fr.gtm.dao;
 
 public class DAO {
 
