@@ -17,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.MapKey;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -40,12 +42,18 @@ public class Film {
 	@Column(name="duree")
 	private int duree;
 	
+//	@ManyToMany(fetch=FetchType.LAZY)
+//	@JoinTable(name="films_acteur",
+//	joinColumns=@JoinColumn(name="fk_film"),
+//	inverseJoinColumns=@JoinColumn(name="fk_acteur"))
+//	private List<Acteur> distribution = new ArrayList<Acteur>();
+
 	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name="films_acteur",
-	joinColumns=@JoinColumn(name="fk_film"),
-	inverseJoinColumns=@JoinColumn(name="fk_acteur"))
-	private List<Acteur> distribution = new ArrayList<Acteur>();
-	
+	joinColumns=@JoinColumn(name="fk_film", referencedColumnName="pk_film"),
+	inverseJoinColumns=@JoinColumn(name="fk_acteur", referencedColumnName="pk_acteur"))
+	@MapKeyColumn(name="role")
+	private Map<String, Acteur> roles = new HashMap<String, Acteur>();
 	
 	public long getId() {
 		return id;
@@ -77,11 +85,13 @@ public class Film {
 	public void setDuree(int duree) {
 		this.duree = duree;
 	}
-	public List<Acteur> getDistribution() {
-		return distribution;
+	public Map<String, Acteur> getRoles() {
+		return roles;
 	}
-	public void setDistribution(List<Acteur> distribution) {
-		this.distribution = distribution;
+	public void setRoles(Map<String, Acteur> roles) {
+		this.roles = roles;
 	}
+
+	
 	
 }

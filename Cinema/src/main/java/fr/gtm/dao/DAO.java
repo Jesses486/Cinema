@@ -1,7 +1,9 @@
 package fr.gtm.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,24 +35,32 @@ public class DAO {
 		return acteurs;
 	}
 	
-	public List<Acteur> getAllActeursFromFilm(long id) {
+	public Map<String, Acteur> getAllActeursFromFilm(long id) {
 		EntityManager em = emf.createEntityManager();
 		Film film = em.find(Film.class, id);
-		List<Acteur> acteurs = new ArrayList<>();
-		for(Acteur a : film.getDistribution()) {
-			acteurs.add(a);
-		}
+		Map<String, Acteur> acteurs = new HashMap<String, Acteur>();
+//		List<Acteur> acteursList = getAllActeur();
+//		Acteur acteur = new Acteur();
+//		String role;
+//		for(String role : film.getRoles().keySet()) {
+//			acteur = film.getRoles();
+//			acteurs.put(,a);
+//		}
+        for (Map.Entry mapentry : film.getRoles().entrySet()) {
+            acteurs.put((String)mapentry.getKey(),(Acteur)mapentry.getValue());
+         }
 		em.close();
 		return acteurs;
 	}
 	
-	public List<Film> getAllFilmsFromActeur(long id) {
+	public Map<String, Film> getAllFilmsFromActeur(long id) {
 		EntityManager em = emf.createEntityManager();
 		Acteur acteur = em.find(Acteur.class, id);
-		List<Film> films = new ArrayList<>();
-		for(Film f : acteur.getFilmographie()) {
-			films.add(f);
-		}
+		Map<String, Film> films = new HashMap<String, Film>();
+//		List<Film> films = new ArrayList<>();
+        for (Map.Entry mapentry : acteur.getRoles().entrySet()) {
+        	films.put((String)mapentry.getKey(),(Film)mapentry.getValue());
+         }
 		em.close();
 		return films;
 	}

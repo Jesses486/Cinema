@@ -2,7 +2,9 @@ package fr.gtm.entities;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -16,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -40,8 +43,17 @@ public class Acteur {
 	@Column(name="date_deces")
 	private LocalDate date_deces;
 
-	@ManyToMany(mappedBy="distribution")
-	private List<Film> filmographie = new ArrayList<Film>();
+//	@ManyToMany(fetch=FetchType.LAZY)
+//	@JoinTable(name="films_acteur",
+//	joinColumns=@JoinColumn(name="fk_film", referencedColumnName="pk_acteur"),
+//	inverseJoinColumns=@JoinColumn(name="fk_acteur", referencedColumnName="pk_film"))
+//	@MapKeyColumn(name="role")
+//	private Map<String, Film> roles = new HashMap<String, Film>();
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(name="films_acteur",
+	joinColumns=@JoinColumn(name="fk_film", referencedColumnName="pk_acteur"),
+	inverseJoinColumns=@JoinColumn(name="fk_acteur", referencedColumnName="pk_film"))
+	private Map<String, Film> roles = new HashMap<String, Film>();
 
 	public String getNom() {
 		return nom;
@@ -83,12 +95,12 @@ public class Acteur {
 		this.id = id;
 	}
 
-	public List<Film> getFilmographie() {
-		return filmographie;
+	public Map<String, Film> getRoles() {
+		return roles;
 	}
 
-	public void setFilmographie(List<Film> filmographie) {
-		this.filmographie = filmographie;
+	public void setRoles(Map<String, Film> roles) {
+		this.roles = roles;
 	}
 	
 	
