@@ -40,10 +40,7 @@ public class Acteur {
 	@Column(name="date_deces")
 	private LocalDate date_deces;
 
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(name="films_acteur",
-	joinColumns=@JoinColumn(name="fk_acteur"),
-	inverseJoinColumns=@JoinColumn(name="fk_film"))
+	@ManyToMany(mappedBy="distribution")
 	private List<Film> filmographie = new ArrayList<Film>();
 
 	public String getNom() {
