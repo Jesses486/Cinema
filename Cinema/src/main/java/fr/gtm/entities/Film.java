@@ -1,21 +1,30 @@
 package fr.gtm.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "films")
 @Access(AccessType.FIELD)
+@NamedQuery(name = "Film.All",query = "SELECT f FROM Film f")
 public class Film {
 
 	@Id
@@ -31,7 +40,11 @@ public class Film {
 	@Column(name="duree")
 	private int duree;
 	
-	private Map<String, Acteur> roles = new HashMap<String, Acteur>();
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(name="films_acteur",
+	joinColumns=@JoinColumn(name="fk_film"),
+	inverseJoinColumns=@JoinColumn(name="fk_acteur"))
+	private List<Acteur> distribution = new ArrayList<Acteur>();
 	
 	
 	public long getId() {
@@ -64,13 +77,11 @@ public class Film {
 	public void setDuree(int duree) {
 		this.duree = duree;
 	}
-	public Map<String, Acteur> getRoles() {
-		return roles;
+	public List<Acteur> getDistribution() {
+		return distribution;
 	}
-	public void setRoles(Map<String, Acteur> roles) {
-		this.roles = roles;
+	public void setDistribution(List<Acteur> distribution) {
+		this.distribution = distribution;
 	}
-	
-	
 	
 }
